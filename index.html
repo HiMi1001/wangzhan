@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>同步播放视频</title>
+    <title>遮罩滑块切换视频</title>
     <style>
         body {
             margin: 0;
@@ -47,43 +47,21 @@
 <body>
     <div class="container">
         <!-- 视频1在底层 -->
-        <video src="videos/video1.mp4" autoplay muted loop class="video1" id="video1"></video>
+        <video src="video1.mp4" autoplay muted loop class="video1"></video>
         <!-- 视频2在上层，受遮罩影响 -->
-        <video src="videos/video2.mp4" autoplay muted loop class="video2" id="video2"></video>
+        <video src="video2.mp4" autoplay muted loop class="video2" id="video2"></video>
     </div>
     <input type="range" min="0" max="100" value="100" class="slider" id="slider">
 
     <script>
         const slider = document.getElementById('slider');
-        const video1 = document.getElementById('video1');
         const video2 = document.getElementById('video2');
 
-        // 滑块控制遮罩
         slider.addEventListener('input', () => {
-            const value = slider.value;
+            const value = slider.value; // 获取滑块值
+            // 根据滑块值调整遮罩大小
             video2.style.clipPath = `inset(0% ${100 - value}% 0% 0%)`;
         });
-
-        // 同步视频播放状态
-        function syncVideos(source, target) {
-            // 同步播放进度
-            target.currentTime = source.currentTime;
-            // 如果目标视频暂停，则播放
-            if (source.paused && !target.paused) {
-                target.pause();
-            } else if (!source.paused && target.paused) {
-                target.play();
-            }
-        }
-
-        // 监听视频播放事件，同步视频
-        video1.addEventListener('play', () => video2.play());
-        video1.addEventListener('pause', () => video2.pause());
-        video1.addEventListener('timeupdate', () => syncVideos(video1, video2));
-
-        video2.addEventListener('play', () => video1.play());
-        video2.addEventListener('pause', () => video1.pause());
-        video2.addEventListener('timeupdate', () => syncVideos(video2, video1));
     </script>
 </body>
 </html>
